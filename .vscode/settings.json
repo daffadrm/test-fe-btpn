@@ -1,0 +1,16 @@
+{
+	"prettier.useTabs": true,
+	"prettier.singleQuote": true,
+	"prettier.semi": true,
+	"editor.formatOnPaste": true,
+	"editor.formatOnSave": true,
+	"editor.tabSize": 2,
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": "explicit"
+	},
+	"eslint.validate": ["javascript"],
+	"[javascript]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"javascript.updateImportsOnFileMove.enabled": "always"
+}
