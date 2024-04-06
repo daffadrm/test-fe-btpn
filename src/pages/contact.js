@@ -62,7 +62,7 @@ const Contact = () => {
 
 	const [deleteContract, { isSuccess, isError }] = useDeleteContactMutation();
 
-	const { data: todos, isLoading, refetch } = useGetContactQuery();
+	const { data: todos, isLoading, isFetching, refetch } = useGetContactQuery();
 
 	const handleChangePage = (_, newPage) => {
 		setPage(newPage);
@@ -160,7 +160,7 @@ const Contact = () => {
 					<Add /> Add
 				</Button>
 			</Header>
-			{isLoading ? (
+			{isLoading || isFetching ? (
 				<Loading />
 			) : (
 				<>
