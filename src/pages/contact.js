@@ -58,6 +58,7 @@ const Contact = () => {
 	const [page, setPage] = useState(0);
 	const [isOpen, setIsOpen] = useState(false);
 	const [rowsPerPage, setRowsPerPage] = useState(5);
+	const [searchTerm, setSearchTerm] = useState('');
 
 	const [deleteContract, { isSuccess, isError }] = useDeleteContactMutation();
 
@@ -117,6 +118,14 @@ const Contact = () => {
 		});
 	};
 
+	const handleSearchChange = (event) => {
+		setSearchTerm(event.target.value);
+	};
+
+	const filteredData = contractData?.filter((item) =>
+		item?.firstName?.toLowerCase().includes(searchTerm.toLowerCase())
+	);
+
 	useEffect(() => {
 		setContractData(todos?.data);
 	}, [todos]);
@@ -136,6 +145,8 @@ const Contact = () => {
 						sx={{ ml: 1, flex: 1 }}
 						placeholder="Search..."
 						inputProps={{ 'aria-label': 'search google maps' }}
+						value={searchTerm}
+						onChange={handleSearchChange}
 					/>
 					<IconButton type="button" sx={{ p: '10px' }} aria-label="search">
 						<SearchIcon />
@@ -165,7 +176,7 @@ const Contact = () => {
 								</TableRow>
 							</TableHead>
 							<TableBody>
-								{contractData
+								{filteredData
 									?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
 									?.map((employee, index) => (
 										<TableRow key={index}>
@@ -173,7 +184,17 @@ const Contact = () => {
 											<TableCell align="left">{employee.lastName}</TableCell>
 											<TableCell align="left">{employee.age}</TableCell>
 											<TableCell align="left">
-												<img src={employee.photo} width={50} height={50} />
+												<img
+													src={
+														employee.photo ||
+														'../assets/images/placeholder.jpeg'
+													}
+													width={50}
+													height={50}
+													alt="Uploaded photo"
+													loading="lazy"
+													placeholder={require('../assets/images/placeholder.jpeg')}
+												/>
 											</TableCell>
 											<TableCell align="center">
 												<IconButton

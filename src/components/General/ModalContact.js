@@ -72,29 +72,28 @@ const ModalContact = ({
 		if (file) {
 			const reader = new FileReader();
 			reader.onloadend = () => {
-				setChangePhoto(reader.result); // Perbarui state foto dengan URL data
+				setChangePhoto(reader.result);
 			};
 			reader.readAsDataURL(file);
 		}
 	};
 
 	const handleSubmit = async (e) => {
+		e.preventDefault();
 		let payload;
 		if (isEdit) {
 			payload = {
 				...state,
 				age: Number(state.age),
+				photo: changePhoto,
 			};
 		} else {
 			payload = {
 				...state,
 				age: Number(state.age),
-				photo:
-					'http://vignette1.wikia.nocookie.net/lotr/images/6/68/Bilbo_baggins.jpg/revision/latest?cb=20130202022550',
+				photo: changePhoto,
 			};
 		}
-		e.preventDefault();
-		console.log(state);
 
 		if (state && state.firstName && state.lastName && state.age) {
 			try {
@@ -138,14 +137,15 @@ const ModalContact = ({
 				firstName: typeId?.firstName,
 				lastName: typeId?.lastName,
 				age: typeId?.age,
-				photo: typeId?.photo,
 			});
+			setChangePhoto(typeId?.photo);
 		}
 	}, [typeId]);
 
 	useEffect(() => {
 		if (!open) {
 			setState({});
+			setChangePhoto(null);
 		}
 	}, [open]);
 
@@ -197,39 +197,31 @@ const ModalContact = ({
 										onChange={handleChange}
 										errorMessages={['this field is required']}
 										label="Age"
-										// validators={['required', 'maxStringLength: 9']}
-										validators={[
-											'minNumber: 0',
-											'maxNumber: 100',
-											// 'matchRegexp:^[0-9]$',
-										]}
+										validators={['required', 'minNumber: 0', 'maxNumber: 100']}
 									/>
 								</Grid>
 								<Grid item lg={2} md={2} sm={2} xs={2} sx={{ mt: 2 }}>
 									<img
-										srcSet={`${photo}`}
-										src={`${photo}`}
-										alt={photo}
+										src={changePhoto || 'placeholder.jpg'} // Gunakan foto yang diunggah atau placeholder jika tidak ada foto yang dipilih
+										alt="Uploaded photo"
 										loading="lazy"
 										height={100}
 										width={100}
 									/>
 								</Grid>
 								<Grid item lg={6} md={6} sm={6} xs={6} sx={{ mt: 2 }}>
-									<Button
-										component="label"
-										role={undefined}
-										variant="contained"
-										tabIndex={-1}
-									>
-										Upload Photo
-										<VisuallyHiddenInput
-											type="file"
-											onChange={handleFileChange}
-											accept="image/*"
-											style={{ display: 'none' }}
-										/>
-									</Button>
+									<input
+										type="file"
+										accept="image/*"
+										style={{ display: 'none' }}
+										onChange={handleFileChange}
+										id="upload-photo"
+									/>
+									<label htmlFor="upload-photo">
+										<Button component="span" variant="contained">
+											Upload Photo
+										</Button>
+									</label>
 								</Grid>
 							</Grid>
 							<FooterButton>
